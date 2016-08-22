@@ -1,7 +1,7 @@
 package com.gehtsoft.threadPool;
 
 import com.gehtsoft.factory.EntityFactory;
-import com.gehtsoft.iDAO.IAuthService;
+import com.gehtsoft.iDAO.ITokenService;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.Callable;
@@ -13,7 +13,7 @@ public class AuthCallable implements Callable<Object> {
 
     final static Logger logger = Logger.getLogger("threadPool");
 
-    private IAuthService authService;
+    private ITokenService tokenService;
 
     private Object param;
     private String method;
@@ -31,7 +31,7 @@ public class AuthCallable implements Callable<Object> {
             throw new ExceptionInInitializerError("Entity class must be not null!");
         }
         this.method = method;
-        authService = EntityFactory.getAuthService(c);
+        tokenService = EntityFactory.getTokenService(c);
     }
 
     @Override
@@ -41,17 +41,17 @@ public class AuthCallable implements Callable<Object> {
         }
         Object result = null;
         if (method.equals("getAll")) {
-            result = authService.getAll();
+            result = tokenService.getAll();
         } else if (method.equals("getById")) {
-            result = authService.getById((Integer) param);
+            result = tokenService.getById((Integer) param);
         } else if (method.equals("add")) {
-            result = authService.add(param);
+            result = tokenService.add(param);
         } else if (method.equals("deleteById")) {
-            authService.deleteById((Integer) param);
+            tokenService.deleteById((Integer) param);
         } else if (method.equals("update")) {
-            result = authService.update(param);
+            result = tokenService.update(param);
         } else if (method.equals("deleteExpired")) {
-            authService.deleteExpired();
+            tokenService.deleteExpired();
         } else {
             logger.error("There are no method in factory for " + method + "!");
             throw new ExceptionInInitializerError("There are no method in factory for " + method + "!");

@@ -42,7 +42,7 @@ public class EntityFactory {
         }
     }
 
-    public static ITokenService getAuthService(Class c) {
+    public static ITokenService getTokenService(Class c) {
         if (c.equals(Token.class)) {
             return ServiceFactory.getAuthService();
         } else {

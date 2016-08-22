@@ -31,7 +31,7 @@ public class TokenCallable implements Callable<Object> {
             throw new ExceptionInInitializerError("Entity class must be not null!");
         }
         this.method = method;
-        authService = EntityFactory.getAuthService(c);
+        authService = EntityFactory.getTokenService(c);
     }
 
     @Override
