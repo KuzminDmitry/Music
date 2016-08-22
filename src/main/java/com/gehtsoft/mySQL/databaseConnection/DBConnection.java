@@ -26,7 +26,7 @@ public class DBConnection {
 
     private boolean locked = false;
 
-    private Date resetTime = new Date();
+    private Date resetTime = null;
 
     public DBConnection() throws SQLException {
         Properties properties = ConfigProperties.getProperties();
