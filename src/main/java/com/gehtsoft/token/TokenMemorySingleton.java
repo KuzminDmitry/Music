@@ -15,7 +15,7 @@ public class TokenMemorySingleton {
     private static volatile TokenMemorySingleton instance;
 
     Properties properties = ConfigProperties.getProperties();
-    Integer tokenExpireTimer = Integer.parseInt(properties.getProperty("database.timer.token.expire"));
+    Integer tokenExpireTimer = Integer.parseInt(properties.getProperty("database.timer.token.expire.second"));
     Integer tokenLifeTimeInMonth = Integer.parseInt(properties.getProperty("database.token.lifetime.month"));
 
     private Timer timer = new Timer();
