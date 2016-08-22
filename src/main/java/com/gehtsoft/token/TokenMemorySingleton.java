@@ -15,7 +15,7 @@ import java.util.*;
 public class TokenMemorySingleton {
 
     final static Logger logger = Logger.getLogger("token");
-    
+
     private static volatile TokenMemorySingleton instance;
 
     Properties properties = ConfigProperties.getProperties();
