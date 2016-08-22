@@ -5,6 +5,7 @@ import com.gehtsoft.crypto.signature.ISignature;
 import com.gehtsoft.core.User;
 import com.gehtsoft.factory.SecurityFactory;
 import com.gehtsoft.threadPool.ThreadPoolSingleton;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
@@ -12,6 +13,9 @@ import java.util.*;
  * Created by dkuzmin on 7/28/2016.
  */
 public class TokenMemorySingleton {
+
+    final static Logger logger = Logger.getLogger("token");
+    
     private static volatile TokenMemorySingleton instance;
 
     Properties properties = ConfigProperties.getProperties();
