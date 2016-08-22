@@ -39,7 +39,7 @@ public class TokenMemorySingleton {
                    e.printStackTrace();
                 }
             }
-        }, tokenExpireTimer, tokenExpireTimer);
+        }, tokenExpireTimer * 1000, tokenExpireTimer * 1000);
         this.tokens = (List)ThreadPoolSingleton.getInstance().authThread(Token.class, "getAll", null);
     }
 
