@@ -1,1 +1,0 @@
-xcopy D:\WORK\Develop\JAVA\IdeaProjects\Music\target\Music.war C:\WORK\apache-tomcat-7.0.70\webapps
