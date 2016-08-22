@@ -33,6 +33,9 @@ public class TokenMemorySingleton {
     private ISignature signature = SecurityFactory.getTokenSignature();
 
     private TokenMemorySingleton() throws Exception {
+        logger.info("Started.");
+        logger.info("Properties: " + "tokenExpireTimer=" + tokenExpireTimer + "; " + "tokenLifeTimeInMonth=" + tokenLifeTimeInMonth);
+        logger.info("Schedule: delete expired tokens every " + tokenExpireTimer + " seconds.");
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -40,7 +43,9 @@ public class TokenMemorySingleton {
                     deleteExpiredTokens();
                     ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteExpired", null);
                 }catch (Exception e){
-                   e.printStackTrace();
+                  if(logger.isDebugEnabled()){
+                      logger.debug(e.getStackTrace());
+                  }
                 }
             }
         }, tokenExpireTimer * 1000, tokenExpireTimer * 1000);
@@ -60,9 +65,11 @@ public class TokenMemorySingleton {
     private Token tokenExist(User user){
         for(Token token : this.tokens){
             if(token.getUserName().equals(user.getUserName())){
+                logger.info("Token exist: " + token);
                 return token;
             }
         }
+        logger.info("Token does not exist.");
         return null;
     }
 
@@ -73,6 +80,7 @@ public class TokenMemorySingleton {
             if (now.after(token.getExpirationDate()) && token.getExpirationDate().before(now)) {
                 this.tokens.remove(token);
                 ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteById", token.getId());
+                logger.info("Expired user's token was deleted: " + token);
                 token = null;
             }
         }
@@ -89,10 +97,12 @@ public class TokenMemorySingleton {
             c.add(Calendar.MONTH, tokenLifeTimeInMonth);
             token.setExpirationDate(c.getTime());
             //
-            token = (Token)ThreadPoolSingleton.getInstance().authThread(Token.class, "add", token);
-            if(token.getId() != null) {
+            token = (Token) ThreadPoolSingleton.getInstance().authThread(Token.class, "add", token);
+            if (token.getId() != null) {
                 this.tokens.add(token);
-            }else{
+                logger.info("User's token was created: " + token);
+            } else {
+                logger.info("User's token was not created because id is null: " + token);
                 return null;
             }
         }
@@ -104,17 +114,20 @@ public class TokenMemorySingleton {
             if(token.getJwt().equals(tokenForRemove.getJwt())){
                 this.tokens.remove(token);
                 ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteById", token.getId());
+                logger.info("User's token was deleted: " + token);
                 return;
             }
         }
     }
 
     public void deleteExpiredTokens()throws Exception {
+        logger.info("Start deleting expired tokens.");
         for (Token token : this.tokens) {
             Date now = new Date();
             if (now.after(token.getExpirationDate()) && token.getExpirationDate().before(now)) {
                 this.tokens.remove(token);
                 ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteById", token.getId());
+                logger.info("Expired user's token was deleted: " + token);
             }
         }
     }
@@ -126,11 +139,14 @@ public class TokenMemorySingleton {
                 if(now.after(token.getExpirationDate()) && token.getExpirationDate().before(now)){
                     this.tokens.remove(token);
                     ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteById", token.getId());
+                    logger.info("Expired user's token was deleted: " + token);
                     return null;
                 }
+                logger.info("User's token was found: " + token);
                 return token;
             }
         }
+        logger.info("User's token was not found.");
         return null;
     }
 }
