@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class GenreResource {
 
     final static Logger logger = Logger.getLogger("resource");
 
-    private boolean error = false;
+    private boolean isAuthorized = true;
 
     @Context
     ServletContext servletContext;
@@ -38,52 +39,47 @@ public class GenreResource {
 
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        this.response = AuthenticateChecker.validate(this.request, this.response);
+        if (!AuthenticateChecker.validate(this.request)) {
+            response.sendError(403);
+            isAuthorized = false;
+        }
     }
 
     @GET
     public List<Genre> getAllGenres() throws Exception {
-        if(!error) {
-            logger.info("Get all genres started.");
-            return (List) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "getAll", null);
-        }
-        return null;
+        if(!isAuthorized) return null;
+        logger.info("Get all genres started.");
+        return (List) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "getAll", null);
+
     }
 
     @GET
     @Path("{id}")
     public Genre getGenreById(@NotNull @PathParam("id") Integer id) throws Exception {
-        if(!error) {
-            logger.info("Search started for genre by parameter: " + " id " + id + ".");
-            return (Genre) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "getById", id);
-        }
-        return null;
+        if(!isAuthorized) return null;
+        logger.info("Search started for genre by parameter: " + " id " + id + ".");
+        return (Genre) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "getById", id);
     }
 
     @PUT
     public Genre updateGenre(Genre genre) throws Exception {
-        if(!error) {
-            logger.info("Update started for genre by singer track: " + genre + ".");
-            return (Genre) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "update", genre);
-        }
-        return null;
+        if(!isAuthorized) return null;
+        logger.info("Update started for genre by singer track: " + genre + ".");
+        return (Genre) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "update", genre);
     }
 
     @DELETE
     public void deleteGenre(@NotNull @QueryParam("id") Integer id) throws Exception {
-        if(!error) {
-            logger.info("Delete started for genre by parameter: " + " id " + id + ".");
-            ThreadPoolSingleton.getInstance().basicThread(Genre.class, "deleteById", id);
-        }
+        if(!isAuthorized) return;
+        logger.info("Delete started for genre by parameter: " + " id " + id + ".");
+        ThreadPoolSingleton.getInstance().basicThread(Genre.class, "deleteById", id);
     }
 
     @POST
     public Genre insertGenre(Genre genre) throws Exception {
-        if(!error) {
-            logger.info("Add new genre started: " + genre + ".");
-            return (Genre) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "add", genre);
-        }
-        return null;
+        if(!isAuthorized) return null;
+        logger.info("Add new genre started: " + genre + ".");
+        return (Genre) ThreadPoolSingleton.getInstance().basicThread(Genre.class, "add", genre);
     }
 }
 

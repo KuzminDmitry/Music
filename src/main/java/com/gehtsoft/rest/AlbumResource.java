@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -25,6 +26,8 @@ import java.util.List;
 public class AlbumResource {
 
     final static Logger logger = Logger.getLogger("resource");
+
+    private boolean isAuthorized = true;
 
     @Context
     ServletContext servletContext;
@@ -37,11 +40,15 @@ public class AlbumResource {
 
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        this.response = AuthenticateChecker.validate(this.request, this.response);
+        if (!AuthenticateChecker.validate(this.request)) {
+            response.sendError(403);
+            isAuthorized = false;
+        }
     }
 
     @GET
     public List<Album> getAllAlbums() throws Exception {
+        if(!isAuthorized) return null;
         logger.info("Get all albums started.");
         return (List) ThreadPoolSingleton.getInstance().basicThread(Album.class, "getAll", null);
     }
@@ -49,24 +56,28 @@ public class AlbumResource {
     @GET
     @Path("{id}")
     public Album getAlbumById(@NotNull @PathParam("id") Integer id) throws Exception {
+        if(!isAuthorized) return null;
         logger.info("Search started for album by parameter: " + " id " + id + ".");
         return (Album) ThreadPoolSingleton.getInstance().basicThread(Album.class, "getById", id);
     }
 
     @PUT
     public Album updateAlbum(Album album) throws Exception {
+        if(!isAuthorized) return null;
         logger.info("Update started for album by singer track: " + album + ".");
         return (Album) ThreadPoolSingleton.getInstance().basicThread(Album.class, "update", album);
     }
 
     @DELETE
     public void deleteAlbum(@NotNull @QueryParam("id") Integer id) throws Exception {
+        if(!isAuthorized) return;
         logger.info("Delete started for album by parameter: " + " id " + id + ".");
         ThreadPoolSingleton.getInstance().basicThread(Album.class, "deleteById", id);
     }
 
     @POST
     public Album insertAlbum(Album album) throws Exception {
+        if(!isAuthorized) return null;
         logger.info("Add new album started: " + album + ".");
         return (Album) ThreadPoolSingleton.getInstance().basicThread(Album.class, "add", album);
     }

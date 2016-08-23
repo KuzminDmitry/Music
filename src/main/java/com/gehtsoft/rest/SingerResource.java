@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class SingerResource {
 
     final static Logger logger = Logger.getLogger("resource");
 
-    private boolean error = false;
+    private boolean isAuthorized = true;
 
     @Context
     ServletContext servletContext;
@@ -36,54 +37,54 @@ public class SingerResource {
     @Context
     HttpServletRequest request;
 
+
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        this.response = AuthenticateChecker.validate(this.request, this.response);
+        if (!AuthenticateChecker.validate(this.request)) {
+            response.sendError(403);
+            isAuthorized = false;
+        }
     }
 
     @GET
     public List<Singer> getAllSingers() throws Exception {
-        if(!error) {
-            logger.info("Get all singers started.");
-            return (List) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "getAll", null);
-        }
-        return null;
+        if (!isAuthorized) return null;
+        logger.info("Get all singers started.");
+        return (List) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "getAll", null);
+
     }
 
     @GET
     @Path("{id}")
     public Singer getSingerById(@NotNull @PathParam("id") Integer id) throws Exception {
-        if(!error) {
-            logger.info("Search started for singer by parameter: " + " id " + id + ".");
-            return (Singer) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "getById", id);
-        }
-        return null;
+        if (!isAuthorized) return null;
+        logger.info("Search started for singer by parameter: " + " id " + id + ".");
+        return (Singer) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "getById", id);
+
     }
 
     @PUT
     public Singer updateSinger(Singer singer) throws Exception {
-        if(!error) {
-            logger.info("Update started for singer by singer track: " + singer + ".");
-            return (Singer) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "update", singer);
-        }
-        return null;
+        if (!isAuthorized) return null;
+        logger.info("Update started for singer by singer track: " + singer + ".");
+        return (Singer) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "update", singer);
+
     }
 
     @DELETE
     public void deleteSinger(@NotNull @QueryParam("id") Integer id) throws Exception {
-        if(!error) {
-            logger.info("Delete started for singer by parameter: " + " id " + id + ".");
-            ThreadPoolSingleton.getInstance().basicThread(Singer.class, "deleteById", id);
-        }
+        if (!isAuthorized) return;
+        logger.info("Delete started for singer by parameter: " + " id " + id + ".");
+        ThreadPoolSingleton.getInstance().basicThread(Singer.class, "deleteById", id);
+
     }
 
     @POST
     public Singer insertSinger(Singer singer) throws Exception {
-        if(!error) {
-            logger.info("Add new singer started: " + singer + ".");
-            return (Singer) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "add", singer);
-        }
-        return null;
+        if (!isAuthorized) return null;
+        logger.info("Add new singer started: " + singer + ".");
+        return (Singer) ThreadPoolSingleton.getInstance().basicThread(Singer.class, "add", singer);
+
     }
 }
 
