@@ -1,5 +1,6 @@
 package com.gehtsoft.rest;
 
+import com.gehtsoft.auth.AuthenticateChecker;
 import com.gehtsoft.token.Token;
 import com.gehtsoft.token.TokenMemorySingleton;
 import com.gehtsoft.core.Genre;
@@ -37,38 +38,8 @@ public class GenreResource {
 
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        this.request = httpServletRequest;
-        String jwt = null;
-        Cookie[] cookies = httpServletRequest.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("authdata")) {
-                    jwt = cookie.getValue();
-                    logger.info("JWT from cookies: " + jwt);
-                }
-            }
-        } else {
-            logger.error("Cookies is null!");
-            response.sendError(403);
-            error = true;
-        }
-        if (jwt == null) {
-            logger.error("JWT is null. User is not authorized. Access denied!");
-            response.sendError(403);
-            error = true;
-        } else {
-            Token token = TokenMemorySingleton.getInstance().getToken(jwt);
-            if (token == null) {
-                logger.error("Token is null. User is not authorized. Access denied!");
-                response.sendError(403);
-                error = true;
-            }
-            else {
-                logger.info("User is authorized. Access is allowed!");
-            }
-        }
+        this.response = AuthenticateChecker.validate(this.request, this.response);
     }
-
 
     @GET
     public List<Genre> getAllGenres() throws Exception {
