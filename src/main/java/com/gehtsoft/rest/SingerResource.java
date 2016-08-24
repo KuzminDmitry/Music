@@ -1,20 +1,16 @@
 package com.gehtsoft.rest;
 
 import com.gehtsoft.auth.AuthenticateChecker;
-import com.gehtsoft.token.Token;
-import com.gehtsoft.token.TokenMemorySingleton;
 import com.gehtsoft.core.Singer;
 import com.gehtsoft.threadPool.ThreadPoolSingleton;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
