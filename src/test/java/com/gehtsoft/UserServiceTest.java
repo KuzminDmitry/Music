@@ -2,6 +2,7 @@ package com.gehtsoft;
 
 import com.gehtsoft.core.*;
 import com.gehtsoft.factory.ServiceFactory;
+import com.gehtsoft.iDAO.IBasicService;
 import com.gehtsoft.iDAO.IUserService;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
@@ -35,6 +36,7 @@ public class UserServiceTest extends JerseyTest {
     }
 
     IUserService userService = ServiceFactory.getUserService();
+    IBasicService roleService = ServiceFactory.getRoleService();
 
     @Test
     public void serviceUserTest() throws Exception {
@@ -42,8 +44,13 @@ public class UserServiceTest extends JerseyTest {
         String username = "Имя пользователя";
         String password = "Пароль пользователя";
 
+        List<Role> roles = roleService.getAll();
+
         List<Integer> roleIds = new ArrayList<>();
-        roleIds.add(1);
+
+        for(Role role: roles){
+            roleIds.add(role.getId());
+        }
 
         List<User> users = userService.getAll();
 

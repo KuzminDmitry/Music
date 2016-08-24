@@ -12,6 +12,14 @@ public class ServiceFactory {
 
     private static String database = ConfigProperties.getProperties().getProperty("factory.database");
 
+    public static IBasicService getRoleService() {
+        if (database.equals("mysql")) {
+            return new RoleService();
+        } else {
+            throw new ExceptionInInitializerError("There are no interface in factory for factory.database " + database + "!");
+        }
+    }
+
     public static IUserService getUserService() {
         if (database.equals("mysql")) {
             return new UserService();
