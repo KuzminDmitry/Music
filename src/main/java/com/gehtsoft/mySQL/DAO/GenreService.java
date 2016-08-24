@@ -19,12 +19,9 @@ import java.util.List;
  */
 public class GenreService implements IBasicService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Genre getFromResultSet(ResultSet resultSet) throws SQLException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Genre genre = new Genre();
         genre.setId(resultSet.getInt("id"));
         genre.setName(resultSet.getString("fldName"));

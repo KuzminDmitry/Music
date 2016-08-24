@@ -22,12 +22,9 @@ import java.util.List;
  */
 public class UserService implements IUserService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public User getFromResultSet(ResultSet resultSet) throws SQLException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         User user = new User();
         user.setId(resultSet.getInt("userId"));
         user.setUserName(resultSet.getString("userName"));

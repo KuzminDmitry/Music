@@ -22,12 +22,9 @@ import java.util.List;
  */
 public class TrackService implements ITrackService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Track getFromResultSet(ResultSet resultSet) throws SQLException, ParseException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Track track = new Track();
         track.setId(resultSet.getInt("trackId"));
         track.setName(resultSet.getString("trackName"));

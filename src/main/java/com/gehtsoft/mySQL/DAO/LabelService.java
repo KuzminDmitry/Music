@@ -16,12 +16,9 @@ import java.util.List;
  */
 public class LabelService implements IBasicService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Label getFromResultSet(ResultSet resultSet) throws SQLException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Label label = new Label();
         label.setId(resultSet.getInt("id"));
         label.setName(resultSet.getString("fldName"));

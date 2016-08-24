@@ -18,12 +18,9 @@ import java.util.List;
  */
 public class SingerService implements IBasicService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Singer getFromResultSet(ResultSet resultSet) throws SQLException, ParseException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Singer singer = new Singer();
         singer.setId(resultSet.getInt("id"));
         singer.setName(resultSet.getString("fldName"));

@@ -17,12 +17,9 @@ import java.util.*;
  */
 public class TokenService implements ITokenService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Token getFromResultSet(ResultSet resultSet) throws SQLException, ParseException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Token token = new Token();
         token.setId(resultSet.getInt("id"));
         token.setUserId(resultSet.getInt("userId"));

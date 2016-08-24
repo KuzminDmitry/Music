@@ -19,12 +19,9 @@ import java.util.List;
  */
 public class RoleService implements IBasicService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Role getFromResultSet(ResultSet resultSet) throws SQLException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Role role = new Role();
         role.setId(resultSet.getInt("id"));
         role.setName(resultSet.getString("fldName"));

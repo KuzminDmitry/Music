@@ -18,12 +18,9 @@ import java.util.List;
  */
 public class AlbumService implements IBasicService {
 
-    final static Logger logger = Logger.getLogger("DAO");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Album getFromResultSet(ResultSet resultSet) throws SQLException, ParseException {
-        if(logger.isDebugEnabled()){
-            logger.debug("Result set: " + resultSet);
-        }
         Album album = new Album();
         album.setId(resultSet.getInt("id"));
         album.setName(resultSet.getString("fldName"));
