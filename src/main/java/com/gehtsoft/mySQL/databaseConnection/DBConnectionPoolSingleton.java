@@ -2,7 +2,8 @@ package com.gehtsoft.mySQL.databaseConnection;
 
 
 import com.gehtsoft.configProperties.ConfigProperties;
-import com.gehtsoft.date.GreenwichMeanTime;
+import com.gehtsoft.date.IDateService;
+import com.gehtsoft.factory.DateFactory;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
@@ -22,6 +23,8 @@ public class DBConnectionPoolSingleton {
     private static Integer maxAmount;
     private static Integer resetTimeInSeconds;
     private static Integer amountOfLocked;
+
+    private IDateService dateService = DateFactory.getDateService();
 
     private DBConnectionPoolSingleton() throws SQLException {
         logger.info("Started.");
@@ -61,7 +64,7 @@ public class DBConnectionPoolSingleton {
             if (!dbConnection.isLocked()) {
                 amountOfLocked++;
                 dbConnection.setLocked(true);
-                dbConnection.setResetTime(GreenwichMeanTime.getNow());
+                dbConnection.setResetTime(dateService.getNow());
                 if(logger.isDebugEnabled()) {
                     logger.debug("Connection locked: " + dbConnection.getConnection());
                     logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
@@ -75,7 +78,7 @@ public class DBConnectionPoolSingleton {
             DBConnection dbConnection = new DBConnection();
             dbConnection.setLocked(true);
             dbConnections.add(dbConnection);
-            dbConnection.setResetTime(GreenwichMeanTime.getDate(Calendar.SECOND, resetTimeInSeconds));
+            dbConnection.setResetTime(dateService.getDate(Calendar.SECOND, resetTimeInSeconds));
             if(logger.isDebugEnabled()) {
                 logger.debug("Connection locked: " + dbConnection.getConnection());
                 logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
@@ -91,7 +94,7 @@ public class DBConnectionPoolSingleton {
             if (dbc.equals(dbConnection)) {
                 amountOfLocked--;
                 dbc.setLocked(false);
-                dbConnection.setResetTime(GreenwichMeanTime.getDate(Calendar.SECOND, resetTimeInSeconds));
+                dbConnection.setResetTime(dateService.getDate(Calendar.SECOND, resetTimeInSeconds));
                 if(logger.isDebugEnabled()) {
                     logger.debug("Connection unlocked: " + dbConnection.getConnection());
                     logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
@@ -108,7 +111,7 @@ public class DBConnectionPoolSingleton {
             logger.debug("Start clearing locked connection with timeout.");
         }
         for (DBConnection dbConnection : dbConnections) {
-            Date now = GreenwichMeanTime.getNow();
+            Date now = dateService.getNow();
             if (dbConnection.isLocked() && (dbConnection.getResetTime().before(now)) && (now.after(dbConnection.getResetTime()))) {
                 if(logger.isDebugEnabled()) {
                     logger.debug("Connection removed back to unlocked: " + dbConnection.getConnection());

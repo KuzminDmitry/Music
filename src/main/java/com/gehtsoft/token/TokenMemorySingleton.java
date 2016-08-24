@@ -3,7 +3,8 @@ package com.gehtsoft.token;
 import com.gehtsoft.configProperties.ConfigProperties;
 import com.gehtsoft.crypto.signature.ISignature;
 import com.gehtsoft.core.User;
-import com.gehtsoft.date.GreenwichMeanTime;
+import com.gehtsoft.date.IDateService;
+import com.gehtsoft.factory.DateFactory;
 import com.gehtsoft.factory.SecurityFactory;
 import com.gehtsoft.threadPool.ThreadPoolSingleton;
 import org.apache.log4j.Logger;
@@ -32,6 +33,8 @@ public class TokenMemorySingleton {
     private List<Token> tokens = new ArrayList<>();
 
     private ISignature signature = SecurityFactory.getTokenSignature();
+
+    private IDateService dateService = DateFactory.getDateService();
 
     private TokenMemorySingleton() throws Exception {
         logger.info("Started.");
@@ -76,7 +79,7 @@ public class TokenMemorySingleton {
 
     public Token addToken(User user) throws Exception {
         Token token = tokenExist(user);
-        Date now = GreenwichMeanTime.getNow();
+        Date now = dateService.getNow();
         if(token != null) {
             if (now.after(token.getExpirationDate()) && token.getExpirationDate().before(now)) {
                 this.tokens.remove(token);
@@ -93,7 +96,7 @@ public class TokenMemorySingleton {
             token.setRoleNames(user.getRoleNames());
             token.setJwt(signature.sign(user.getUserName() + user.getPassword()));
             //Date
-            token.setExpirationDate(GreenwichMeanTime.getDate(Calendar.MONTH, tokenLifeTimeInMonth));
+            token.setExpirationDate(dateService.getDate(Calendar.MONTH, tokenLifeTimeInMonth));
             token = (Token) ThreadPoolSingleton.getInstance().authThread(Token.class, "add", token);
             if (token.getId() != null) {
                 this.tokens.add(token);
@@ -120,7 +123,7 @@ public class TokenMemorySingleton {
     public void deleteExpiredTokens()throws Exception {
         logger.info("Start deleting expired tokens.");
         for (Token token : this.tokens) {
-            Date now = GreenwichMeanTime.getNow();
+            Date now = dateService.getNow();
             if (now.after(token.getExpirationDate()) && token.getExpirationDate().before(now)) {
                 this.tokens.remove(token);
                 ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteById", token.getId());
@@ -132,7 +135,7 @@ public class TokenMemorySingleton {
     public Token getToken(String jwt) throws Exception{
         for(Token token : this.tokens){
             if(token.getJwt().equals(jwt)){
-                Date now = GreenwichMeanTime.getNow();
+                Date now = dateService.getNow();
                 if(now.after(token.getExpirationDate()) && token.getExpirationDate().before(now)){
                     this.tokens.remove(token);
                     ThreadPoolSingleton.getInstance().authThread(Token.class, "deleteById", token.getId());
