@@ -1,5 +1,7 @@
 package com.gehtsoft.mySQL.DAO;
 
+import com.gehtsoft.crypto.hash.IHash;
+import com.gehtsoft.factory.SecurityFactory;
 import com.gehtsoft.mySQL.databaseConnection.DBConnectionPoolSingleton;
 import com.gehtsoft.core.User;
 import com.gehtsoft.iDAO.IUserService;
@@ -162,7 +164,9 @@ public class UserService implements IUserService {
 
     @Override
     public User add(Object object) throws Exception {
+        IHash hashService = SecurityFactory.getPasswordHash();
         User user = (User) object;
+        user.setPassword(hashService.hash(user.getPassword()));
         if (user.getRoleIds().size() != 0) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Started with param user="+user);
@@ -205,7 +209,42 @@ public class UserService implements IUserService {
     @Override
     public Object update(Object object) throws Exception {
         User user = (User) object;
-        //Need finish it
-        return null;
+        if(user.getRoleIds().size() != 0) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Started with param user="+user);
+            }
+            DBConnection dbConnection = DBConnectionPoolSingleton.getInstance().getDBConnection();
+            while (dbConnection == null) {
+                dbConnection = DBConnectionPoolSingleton.getInstance().getDBConnection();
+            }
+            dbConnection.setAutoCommit(false);
+            String query = "update tbMUSUser set fldUserName = ?, fldPasswordHash = ? where id = ?";
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
+            preparedStatement.setString(1, user.getUserName());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setInt(3, user.getId());
+            preparedStatement.executeUpdate();
+            //
+            query = "delete from tbMUSUserNNRole where fldLinkUser = ?";
+            preparedStatement = dbConnection.prepareStatement(query);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.executeUpdate();
+            //
+            query = "insert into tbMUSUserNNRole (fldLinkRole, fldLinkUser) values (?, ?)";
+            for (Integer i : user.getRoleIds()) {
+                preparedStatement = dbConnection.prepareStatement(query);
+                preparedStatement.setInt(1, i);
+                preparedStatement.setInt(2, user.getId());
+                preparedStatement.executeUpdate();
+            }
+            dbConnection.commit();
+            DBConnectionPoolSingleton.getInstance().retrieveDBConnection(dbConnection);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Result of function user: " + user);
+            }
+            return user;
+        }else {
+            return null;
+        }
     }
 }
