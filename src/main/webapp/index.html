@@ -181,10 +181,14 @@
 							<input type="text" class="form-control ng-valid ng-dirty" ng-model="trackSearchKeyword">
 							<hr>						
 							<div ng-repeat="track in tracks | filter: trackSearchKeyword">								
-								<div class="well">									
-									<h3 class="form-inline">{{track.name}}</h3>	
-									<span class="glyphicon glyphicon-sort form-inline" ng-click="accordionTrack(track)" style="font-size: 150%;">
-									</span>
+								<div class="well">	
+									<div ng-click="accordionTrack(track)" style="display: block-inline">
+										<p style="font-size: 20px" class="form-inline">{{track.name}}</p>	
+										<span ng-if="accordionNumber!=track.id" class="glyphicon glyphicon-chevron-down form-inline" style="font-size: 150%">
+										</span>
+										<span ng-if="accordionNumber==track.id" class="glyphicon glyphicon-chevron-up form-inline" style="font-size: 150%;">
+										</span>
+									</div>
 									<div ng-show="track.id==accordionNumber" >
 										<hr>	
 										<label>Track name:</label>
@@ -259,9 +263,13 @@
 							<hr>							
 							<div ng-repeat="genre in genres | filter: genreSearchKeyword">
 								<div class="well">
-									<h3 class="form-inline">{{genre.name}}</h3>	
-									<span class="glyphicon glyphicon-sort form-inline" ng-click="changeAccordionNumber(genre)" style="font-size: 150%;">
-									</span>
+									<div ng-click="changeAccordionNumber(genre)" style="display: block-inline">
+										<p style="font-size: 20px" class="form-inline">{{genre.name}}</p>	
+										<span ng-if="accordionNumber!=genre.id" class="glyphicon glyphicon-chevron-down form-inline" style="font-size: 150%">
+										</span>
+										<span ng-if="accordionNumber==genre.id" class="glyphicon glyphicon-chevron-up form-inline" style="font-size: 150%;">
+										</span>
+									</div>
 									<div ng-show="genre.id==accordionNumber" >
 										<hr>	
 										<label>Genre name:</label>
@@ -308,9 +316,13 @@
 							<hr>							
 							<div ng-repeat="label in labels | filter: labelSearchKeyword">
 								<div class="well">
-									<h3 class="form-inline">{{label.name}}</h3>	
-									<span class="glyphicon glyphicon-sort form-inline" ng-click="changeAccordionNumber(label)" style="font-size: 150%;">
-									</span>
+									<div ng-click="changeAccordionNumber(label)" style="display: block-inline">
+										<p style="font-size: 20px" class="form-inline">{{label.name}}</p>	
+										<span ng-if="accordionNumber!=label.id" class="glyphicon glyphicon-chevron-down form-inline" style="font-size: 150%">
+										</span>
+										<span ng-if="accordionNumber==label.id" class="glyphicon glyphicon-chevron-up form-inline" style="font-size: 150%;">
+										</span>
+									</div>
 									<div ng-show="label.id==accordionNumber" >
 										<hr>	
 										<label>Label name:</label>
@@ -366,9 +378,13 @@
 							<hr>						
 							<div ng-repeat="album in albums | filter: albumSearchKeyword">								
 								<div class="well">									
-									<h3 class="form-inline">{{album.name}}</h3>	
-									<span class="glyphicon glyphicon-sort form-inline" ng-click="changeAccordionNumber(album)" style="font-size: 150%;">
-									</span>
+									<div ng-click="changeAccordionNumber(album)" style="display: block-inline">
+										<p style="font-size: 20px" class="form-inline">{{album.name}}</p>	
+										<span ng-if="accordionNumber!=album.id" class="glyphicon glyphicon-chevron-down form-inline" style="font-size: 150%">
+										</span>
+										<span ng-if="accordionNumber==album.id" class="glyphicon glyphicon-chevron-up form-inline" style="font-size: 150%;">
+										</span>
+									</div>
 									<div ng-show="album.id==accordionNumber" >
 										<hr>	
 										<label>Album name:</label>
@@ -435,9 +451,13 @@
 							<hr>						
 							<div ng-repeat="singer in singers | filter: singerSearchKeyword">								
 								<div class="well">									
-									<h3 class="form-inline">{{singer.name}}</h3>	
-									<span class="glyphicon glyphicon-sort form-inline" ng-click="changeAccordionNumber(singer)" style="font-size: 150%;">
-									</span>
+									<div ng-click="changeAccordionNumber(singer)" style="display: block-inline">
+										<p style="font-size: 20px" class="form-inline">{{singer.name}}</p>	
+										<span ng-if="accordionNumber!=singer.id" class="glyphicon glyphicon-chevron-down form-inline" style="font-size: 150%">
+										</span>
+										<span ng-if="accordionNumber==singer.id" class="glyphicon glyphicon-chevron-up form-inline" style="font-size: 150%;">
+										</span>
+									</div>
 									<div ng-show="singer.id==accordionNumber" >
 										<hr>	
 										<label>Singer name:</label>
