@@ -15,16 +15,18 @@ public class SecurityFactory {
     private static String passwordHashAlgorithm = ConfigProperties.getProperties().getProperty("password.hash.algorithm");
 
     public static ISignature getTokenSignature() {
-        if(tokenHashAlgorithm.equals("SHA256withRSA")) {
+        if (tokenHashAlgorithm.equals("SHA256withRSA")) {
             return new SHA256withRSA();
+        } else {
+            throw new ExceptionInInitializerError("There are no interface in factory for token.signature.algorithm property " + tokenHashAlgorithm + "!");
         }
-        return new SHA256withRSA();
     }
 
     public static IHash getPasswordHash() {
-        if(passwordHashAlgorithm.equals("SHA256")) {
+        if (passwordHashAlgorithm.equals("SHA256")) {
             return new SHA256();
+        } else {
+            throw new ExceptionInInitializerError("There are no interface in factory for password.hash.algorithm " + passwordHashAlgorithm + "!");
         }
-        return new SHA256();
     }
 }

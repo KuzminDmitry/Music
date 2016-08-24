@@ -10,14 +10,15 @@ import com.gehtsoft.date.UTCService;
  */
 public class DateFactory {
 
-        private static String datetime = ConfigProperties.getProperties().getProperty("factory.datetime");
+    private static String datetime = ConfigProperties.getProperties().getProperty("factory.datetime");
 
-        public static IDateService getDateService() {
-            if (datetime.equals("GMT")) {
-                return new GMTService();
-            } else if(datetime.equals("UTC")){
-                return new UTCService();
-            }
+    public static IDateService getDateService() {
+        if (datetime.equals("GMT")) {
             return new GMTService();
+        } else if (datetime.equals("UTC")) {
+            return new UTCService();
+        } else {
+            throw new ExceptionInInitializerError("There are no interface in factory for factory.datetime property " + datetime + "!");
         }
+    }
 }
