@@ -30,27 +30,26 @@
 		<meta charset="utf-8">
 	</head>
 	<body ng-app="MusicManagement" ng-controller="MusicController">
-		<div class="jumbotron text-center">	
-			<span class="glyphicon glyphicon-music form-inline" ng-click="accordionTrack(track)" style="font-size: 200%;">
-			</span>
-			<h1>Music Bootstrap Page</h1>
-			<p>Enjoy the service!</p> 
-			<div ng-controller="SecurityController" ng-if="logged">
-				<button type="button" class="btn btn-info btn-lg" ng-click="logout()">Logout</button>			
+		<div class="page-header col-sm-offset-1 col-sm-10"> 	
+			<span class="glyphicon glyphicon-music form-inline" style="font-size: 200%; display: inline-block">
+			</span>				
+			<h1 style="display: inline-block; margin-left: 5%">Music Bootstrap Page</h1>
+			<div style="display: table-cell; vertical-align: middle; float: right" ng-controller="SecurityController" ng-if="logged">
+				<button style="display: inline-block;" type="button" class="btn btn-info btn-lg" ng-click="logout()">Logout</button>			
 			</div>
-			<div ng-if="!cookieEnabled">
-				<div style="position: fixed; top: 0px; left: 0px; z-index: 3000; 
-					height: 100%; width: 100%; background-color: #FFFFFF">
-					<p style="margin-left: 10px">Browser cookies are not enabled.</p>
-				</div>
-			</div>
-			<noscript>
-				<div style="position: fixed; top: 0px; left: 0px; z-index: 3000; 
-					height: 100%; width: 100%; background-color: #FFFFFF">
-					<p style="margin-left: 10px">JavaScript is not enabled.</p>
-				</div>
-			</noscript>
 		</div>
+		<div ng-if="!cookieEnabled">
+			<div style="position: fixed; top: 0px; left: 0px; z-index: 3000; 
+				height: 100%; width: 100%; background-color: #FFFFFF">
+				<p style="margin-left: 10px">Browser cookies are not enabled.</p>
+			</div>
+		</div>
+		<noscript>
+			<div style="position: fixed; top: 0px; left: 0px; z-index: 3000; 
+				height: 100%; width: 100%; background-color: #FFFFFF">
+				<p style="margin-left: 10px">JavaScript is not enabled.</p>
+			</div>
+		</noscript>
 		<div ng-controller="SecurityController" class="col-sm-offset-4 col-sm-4" ng-if="!logged">		
 			<div ng-if="loginFormValidation.accessDenied">
 				<p class="text-danger">{{loginFormValidation.accessDeniedMessage}}</p>
@@ -60,12 +59,16 @@
 				<p class="text-danger">{{loginFormValidation.usernameErrorMessage}}</p>
 			</div>
 			<input class="form-control" type="text" ng-model="loginForm.username" placeholder="Username..." ng-change="validateLoginForm()"/>
+			<br>
 			<label>Password:</label>
 			<div ng-if="loginFormValidation.passwordError">
 				<p class="text-danger">{{loginFormValidation.passwordErrorMessage}}</p>
 			</div>
 			<input class="form-control" type="password" ng-model="loginForm.password" placeholder="Password..." ng-change="validateLoginForm()"/>
-			<button type="submit" class="btn btn-primary" ng-click="login()">Login</button>	
+			<br>
+			<div style="margin-left: 35%;">
+				<button style="width: 50%" type="button" class="btn btn-primary" ng-click="login()">Login</button>	
+			</div>
 		</div>
 		<div class="col-sm-offset-2 col-sm-8" ng-if="logged">
 			<div>
@@ -148,7 +151,7 @@
 						
 						
 						<div class="well">
-							<div class="alert alert-info" ng-if="tracks.length==0">
+							<div class="alert alert-info" ng-show="tracks.length==0">
 								<strong>Sorry!</strong> There are no tracks! Try search it with form!
 							</div>
 							<form class="form-inline" role="form">							
@@ -169,12 +172,12 @@
 									<option value="">All singer</option>
 								</select>			
 								
-								<button type="submit" class="btn btn-info" ng-click="refreshTracks()">Find tracks</button>	
-								<button type="submit" class="btn btn-warning" ng-click="refreshSearchFrom()">Set standart values for form</button>
+								<button type="submit" class="btn btn-info" ng-click="refreshTracks()">Search tracks</button>	
+								<button type="submit" class="btn btn-warning" ng-click="refreshSearchFrom()">Set standart values for search</button>
 							</form>
 						</div>
 						<div class="well">
-							<label>Search tracks:</label>
+							<label>Track filter:</label>
 							<input type="text" class="form-control ng-valid ng-dirty" ng-model="trackSearchKeyword">
 							<hr>						
 							<div ng-repeat="track in tracks | filter: trackSearchKeyword">								
@@ -251,7 +254,7 @@
 							<button type="submit" class="btn btn-success" ng-click="insertGenre()">Add new genre</button>							
 						</form>
 						<div class="well">
-							<label>Search tracks:</label>
+							<label>Genre filter:</label>
 							<input type="text" class="form-control ng-valid ng-dirty" ng-model="genreSearchKeyword">
 							<hr>							
 							<div ng-repeat="genre in genres | filter: genreSearchKeyword">
@@ -300,7 +303,7 @@
 							<button type="submit" class="btn btn-success" ng-click="insertLabel()">Add new label</button>							
 						</form>
 						<div class="well">
-							<label>Search tracks:</label>
+							<label>Label filter:</label>
 							<input type="text" class="form-control ng-valid ng-dirty" ng-model="labelSearchKeyword">
 							<hr>							
 							<div ng-repeat="label in labels | filter: labelSearchKeyword">
@@ -358,7 +361,7 @@
 						</form>						
 						<hr>
 						<div class="well">
-							<label>Search albums:</label>
+							<label>Album filter:</label>
 							<input type="text" class="form-control ng-valid ng-dirty" ng-model="albumSearchKeyword">
 							<hr>						
 							<div ng-repeat="album in albums | filter: albumSearchKeyword">								
@@ -427,7 +430,7 @@
 						</form>						
 						<hr>
 						<div class="well">
-							<label>Search singers:</label>
+							<label>Singer filter:</label>
 							<input type="text" class="form-control ng-valid ng-dirty" ng-model="singerSearchKeyword">
 							<hr>						
 							<div ng-repeat="singer in singers | filter: singerSearchKeyword">								
