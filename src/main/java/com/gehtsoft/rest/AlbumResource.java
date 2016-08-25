@@ -3,6 +3,7 @@ package com.gehtsoft.rest;
 import com.gehtsoft.auth.AuthenticateChecker;
 import com.gehtsoft.core.Album;
 import com.gehtsoft.threadPool.ThreadPoolSingleton;
+import com.gehtsoft.token.Token;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
@@ -22,7 +23,7 @@ public class AlbumResource {
 
     final static Logger logger = Logger.getLogger("resource");
 
-    private boolean isAuthorized = true;
+    private Token token = null;
 
     @Context
     ServletContext servletContext;
@@ -35,15 +36,14 @@ public class AlbumResource {
 
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        if (!AuthenticateChecker.validate(this.request)) {
+        if ((token = AuthenticateChecker.validate(this.request)) == null) {
             response.sendError(403);
-            isAuthorized = false;
         }
     }
 
     @GET
     public List<Album> getAllAlbums() throws Exception {
-        if(!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Get all albums started.");
         return (List) ThreadPoolSingleton.getInstance().basicThread(Album.class, "getAll", null);
     }
@@ -51,28 +51,28 @@ public class AlbumResource {
     @GET
     @Path("{id}")
     public Album getAlbumById(@NotNull @PathParam("id") Integer id) throws Exception {
-        if(!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Search started for album by parameter: " + " id " + id + ".");
         return (Album) ThreadPoolSingleton.getInstance().basicThread(Album.class, "getById", id);
     }
 
     @PUT
     public Album updateAlbum(Album album) throws Exception {
-        if(!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Update started for album by singer track: " + album + ".");
         return (Album) ThreadPoolSingleton.getInstance().basicThread(Album.class, "update", album);
     }
 
     @DELETE
     public void deleteAlbum(@NotNull @QueryParam("id") Integer id) throws Exception {
-        if(!isAuthorized) return;
+        if(token == null) return;
         logger.info("Delete started for album by parameter: " + " id " + id + ".");
         ThreadPoolSingleton.getInstance().basicThread(Album.class, "deleteById", id);
     }
 
     @POST
     public Album insertAlbum(Album album) throws Exception {
-        if(!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Add new album started: " + album + ".");
         return (Album) ThreadPoolSingleton.getInstance().basicThread(Album.class, "add", album);
     }

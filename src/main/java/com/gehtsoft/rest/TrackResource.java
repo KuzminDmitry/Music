@@ -3,6 +3,7 @@ package com.gehtsoft.rest;
 import com.gehtsoft.auth.AuthenticateChecker;
 import com.gehtsoft.core.Track;
 import com.gehtsoft.threadPool.ThreadPoolSingleton;
+import com.gehtsoft.token.Token;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContext;
@@ -23,7 +24,8 @@ public class TrackResource {
 
     final static Logger logger = Logger.getLogger("resource");
 
-    private boolean isAuthorized = true;
+    private Token token = null;
+
     @Context
     ServletContext servletContext;
 
@@ -33,18 +35,16 @@ public class TrackResource {
     @Context
     HttpServletRequest request;
 
-
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        if (!AuthenticateChecker.validate(this.request)) {
+        if ((token = AuthenticateChecker.validate(this.request)) == null) {
             response.sendError(403);
-            isAuthorized = false;
         }
     }
 
     @GET
     public List<Track> getAllTracks() throws Exception {
-        if (!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Get all tracks started.");
         return (List) ThreadPoolSingleton.getInstance().trackThread(Track.class, "getAll", null);
 
@@ -53,8 +53,7 @@ public class TrackResource {
     @GET
     @Path("find")
     public List<Track> getAllTracksByFilter(@QueryParam("singerId") Integer singerId, @QueryParam("albumId") Integer albumId, @QueryParam("labelId") Integer labelId, @QueryParam("genreId") Integer genreId) throws Exception {
-
-        if (!isAuthorized) return null;
+        if(token == null) return null;
         Track track = new Track();
         track.setAlbumId(albumId);
         track.setGenreId(genreId);
@@ -70,7 +69,7 @@ public class TrackResource {
     @GET
     @Path("{id}")
     public Track getTrackById(@NotNull @PathParam("id") Integer id) throws Exception {
-        if (!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Search started for track by parameter: " + " id " + id + ".");
         return (Track) ThreadPoolSingleton.getInstance().trackThread(Track.class, "getById", id);
 
@@ -78,7 +77,7 @@ public class TrackResource {
 
     @DELETE
     public void deleteTrack(@NotNull @QueryParam("id") Integer id) throws Exception {
-        if (!isAuthorized) return;
+        if(token == null) return;
         logger.info("Delete started for track by parameter: " + " id " + id + ".");
         ThreadPoolSingleton.getInstance().trackThread(Track.class, "deleteById", id);
 
@@ -86,7 +85,7 @@ public class TrackResource {
 
     @PUT
     public Track updateTrack(Track track) throws Exception {
-        if (!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Update started for track by new track: " + track + ".");
         return (Track) ThreadPoolSingleton.getInstance().trackThread(Track.class, "update", track);
 
@@ -94,7 +93,7 @@ public class TrackResource {
 
     @POST
     public Track insertTrack(Track track) throws Exception {
-        if (!isAuthorized) return null;
+        if(token == null) return null;
         logger.info("Add new track started: " + track + ".");
         return (Track) ThreadPoolSingleton.getInstance().trackThread(Track.class, "add", track);
 
