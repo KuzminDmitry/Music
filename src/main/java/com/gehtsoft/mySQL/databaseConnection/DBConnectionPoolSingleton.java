@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class DBConnectionPoolSingleton {
 
-    final static Logger logger = Logger.getLogger("databaseConnection");
+    final static Logger logger = Logger.getLogger("resource");
 
     private static volatile DBConnectionPoolSingleton instance;
 

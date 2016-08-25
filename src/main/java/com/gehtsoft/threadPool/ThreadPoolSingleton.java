@@ -10,7 +10,7 @@ import java.util.concurrent.*;
  */
 public class ThreadPoolSingleton {
 
-    final static Logger logger = Logger.getLogger("threadPool");
+    final static Logger logger = Logger.getLogger("resource");
 
     private static volatile ThreadPoolSingleton instance;
 
@@ -46,13 +46,23 @@ public class ThreadPoolSingleton {
         Future<Object> future = executorService.submit(callable);
         try {
             return future.get(requestTimeoutInSeconds, TimeUnit.SECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+        } catch (TimeoutException e) {
             future.cancel(true);
             logger.error("Request timeout!");
-            if(logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug(e.getMessage());
             }
             throw new Exception("Request timeout!");
+        } catch (ExecutionException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
+        } catch (InterruptedException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -63,13 +73,23 @@ public class ThreadPoolSingleton {
         Future<Object> future = executorService.submit(callable);
         try {
             return future.get(requestTimeoutInSeconds, TimeUnit.SECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+        } catch (TimeoutException e) {
             future.cancel(true);
             logger.error("Request timeout!");
-            if(logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug(e.getMessage());
             }
             throw new Exception("Request timeout!");
+        } catch (ExecutionException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
+        } catch (InterruptedException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -80,13 +100,23 @@ public class ThreadPoolSingleton {
         Future<Object> future = executorService.submit(callable);
         try {
             return future.get(requestTimeoutInSeconds, TimeUnit.SECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+        } catch (TimeoutException e) {
             future.cancel(true);
             logger.error("Request timeout!");
-            if(logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug(e.getMessage());
             }
             throw new Exception("Request timeout!");
+        } catch (ExecutionException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
+        } catch (InterruptedException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -97,13 +127,23 @@ public class ThreadPoolSingleton {
         Future<Object> future = executorService.submit(callable);
         try {
             return future.get(requestTimeoutInSeconds, TimeUnit.SECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+        } catch (TimeoutException e) {
             future.cancel(true);
             logger.error("Request timeout!");
-            if(logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug(e.getMessage());
             }
             throw new Exception("Request timeout!");
+        } catch (ExecutionException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
+        } catch (InterruptedException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage());
+            }
+            throw new Exception(e.getMessage());
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
  */
 public class UserCallable implements Callable<Object> {
 
-    final static Logger logger = Logger.getLogger("threadPool");
+    final static Logger logger = Logger.getLogger("resource");
 
     private IUserService iUserService;
 

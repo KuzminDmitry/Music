@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
  */
 public class TrackCallable implements Callable<Object> {
 
-    final static Logger logger = Logger.getLogger("threadPool");
+    final static Logger logger = Logger.getLogger("resource");
 
     private ITrackService iTrackService;
 

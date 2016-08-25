@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  */
 public class TokenCallable implements Callable<Object> {
 
-    final static Logger logger = Logger.getLogger("threadPool");
+    final static Logger logger = Logger.getLogger("resource");
 
     private ITokenService authService;
 

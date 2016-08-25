@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class DBConnection {
 
-    final static Logger logger = Logger.getLogger("databaseConnection");
+    final static Logger logger = Logger.getLogger("resource");
 
     public Connection getConnection() {
         return connection;
