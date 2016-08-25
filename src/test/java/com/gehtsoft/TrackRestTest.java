@@ -61,7 +61,7 @@ public class TrackRestTest extends JerseyTest {
         user.setUserName("newuser");
         user.setPassword("hispassword");
         List<Integer> roleIds = new ArrayList<>();
-        roleIds.add(1);
+        roleIds.add(Role.USER);
         user.setRoleIds(roleIds);
         List<String> roleNames = new ArrayList<>();
         roleNames.add("User");

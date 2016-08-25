@@ -8,6 +8,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.gehtsoft.core.Role;
 import com.gehtsoft.token.Token;
 import com.gehtsoft.token.TokenMemorySingleton;
 import com.gehtsoft.core.Genre;
@@ -55,7 +56,7 @@ public class GenreRestTest extends JerseyTest {
         user.setUserName("newuser");
         user.setPassword("hispassword");
         List<Integer> roleIds = new ArrayList<>();
-        roleIds.add(1);
+        roleIds.add(Role.USER);
         user.setRoleIds(roleIds);
         List<String> roleNames = new ArrayList<>();
         roleNames.add("User");

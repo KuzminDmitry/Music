@@ -36,7 +36,6 @@ public class UserServiceTest extends JerseyTest {
     }
 
     IUserService userService = ServiceFactory.getUserService();
-    IBasicService roleService = ServiceFactory.getRoleService();
 
     @Test
     public void serviceUserTest() throws Exception {
@@ -44,13 +43,9 @@ public class UserServiceTest extends JerseyTest {
         String username = "Имя пользователя";
         String password = "Пароль пользователя";
 
-        List<Role> roles = roleService.getAll();
-
         List<Integer> roleIds = new ArrayList<>();
 
-        for(Role role: roles){
-            roleIds.add(role.getId());
-        }
+        roleIds.add(Role.USER);
 
         List<User> users = userService.getAll();
 

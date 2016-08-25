@@ -3,12 +3,27 @@ package com.gehtsoft.core;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dkuzmin on 8/24/2016.
  */
 @XmlRootElement
 public class Role {
+
+    public final static int ADMIN = 1;
+    public final static int USER = 2;
+    public final static int MODERATOR = 3;
+
+    public static List getRoleIds() {
+        List<Integer> roleIds = new ArrayList<>();
+        roleIds.add(ADMIN);
+        roleIds.add(USER);
+        roleIds.add(MODERATOR);
+        return roleIds;
+    }
+
     private Integer id;
     private String name;
     private String description;

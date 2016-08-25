@@ -1,5 +1,6 @@
 package com.gehtsoft;
 
+import com.gehtsoft.core.Role;
 import com.gehtsoft.token.Token;
 import com.gehtsoft.token.TokenMemorySingleton;
 import com.gehtsoft.core.Label;
@@ -54,7 +55,7 @@ public class LabelRestTest extends JerseyTest {
         user.setUserName("newuser");
         user.setPassword("hispassword");
         List<Integer> roleIds = new ArrayList<>();
-        roleIds.add(1);
+        roleIds.add(Role.USER);
         user.setRoleIds(roleIds);
         List<String> roleNames = new ArrayList<>();
         roleNames.add("User");
