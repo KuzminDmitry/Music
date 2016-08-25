@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class TokenMemorySingleton {
 
-    final static Logger logger = Logger.getLogger("token");
+    final static Logger logger = Logger.getLogger("authenticate");
 
     private static volatile TokenMemorySingleton instance;
 

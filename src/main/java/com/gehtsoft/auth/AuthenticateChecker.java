@@ -14,7 +14,7 @@ public class AuthenticateChecker {
 
     final static Logger logger = Logger.getLogger("authenticate");
 
-    public static boolean validate(HttpServletRequest httpServletRequest) throws Exception {
+    public static Token validate(HttpServletRequest httpServletRequest) throws Exception {
         String jwt = null;
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null) {
@@ -26,20 +26,20 @@ public class AuthenticateChecker {
             }
             if (jwt == null) {
                 logger.error("JWT is null. User is not authorized. Access denied!");
-                return false;
+                return null;
             } else {
                 Token token = TokenMemorySingleton.getInstance().getToken(jwt);
                 if (token == null) {
                     logger.error("Token is null. User is not authorized. Access denied!");
-                    return false;
+                    return null;
                 } else {
-                    logger.info("User is authorized. Access is allowed! Token: " +token);
+                    logger.info("User is authorized. Access is allowed! Token: " + token);
+                    return token;
                 }
             }
         } else {
             logger.error("Cookies is null!");
-            return false;
+            return null;
         }
-        return true;
     }
 }

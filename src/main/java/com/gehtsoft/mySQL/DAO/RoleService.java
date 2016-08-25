@@ -27,7 +27,7 @@ public class RoleService implements IBasicService {
         role.setName(resultSet.getString("fldName"));
         role.setDescription(resultSet.getString("fldDescription"));
         if(logger.isDebugEnabled()){
-            logger.debug("Role from result set: " + role);
+            logger.debug("UserRole from result set: " + role);
         }
         return role;
     }

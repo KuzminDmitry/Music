@@ -41,7 +41,6 @@ public class DBConnection {
         properties.setProperty("user", user);
         properties.setProperty("password", password);
         properties.setProperty("useUnicode", "true");
-        logger.info("DBConnection created with properties: " + properties);
         try {
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
@@ -60,6 +59,7 @@ public class DBConnection {
             }
             throw new SQLException(e.getMessage());
         }
+        logger.info("DBConnection created: " + connection + " with " + connection.getClass());
     }
 
     public void commit() throws SQLException {

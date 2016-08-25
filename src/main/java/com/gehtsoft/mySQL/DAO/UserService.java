@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class UserService implements IUserService {
 
-    final static Logger logger = Logger.getLogger("resource");
+    final static Logger logger = Logger.getLogger("authenticate");
 
     public User getFromResultSet(ResultSet resultSet) throws SQLException {
         User user = new User();
