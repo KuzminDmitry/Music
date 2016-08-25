@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RoleService implements IBasicService {
 
-    final static Logger logger = Logger.getLogger("resource");
+    final static Logger logger = Logger.getLogger("authenticate");
 
     public Role getFromResultSet(ResultSet resultSet) throws SQLException {
         Role role = new Role();

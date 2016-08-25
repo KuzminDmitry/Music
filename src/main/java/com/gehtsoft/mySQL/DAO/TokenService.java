@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class TokenService implements ITokenService {
 
-    final static Logger logger = Logger.getLogger("resource");
+    final static Logger logger = Logger.getLogger("authenticate");
 
     public Token getFromResultSet(ResultSet resultSet) throws SQLException, ParseException {
         Token token = new Token();

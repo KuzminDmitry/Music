@@ -15,6 +15,7 @@ public class AuthenticateChecker {
     final static Logger logger = Logger.getLogger("authenticate");
 
     public static Token validate(HttpServletRequest httpServletRequest) throws Exception {
+        logger.info("Request URI: " + httpServletRequest.getRequestURI());
         String jwt = null;
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null) {
