@@ -40,6 +40,7 @@ app.controller("TrackController", function($scope, $http, $rootScope, $filter){
 					'Content-Type' : 'application/json; charset=UTF-8'
 				}
 			}).then(function successCallback(response) {
+				$scope.searchForm.genreSelect = $rootScope.genreId;
 				$scope.tracks = response.data;
 			}, function errorCallback(response) {
 				console.log(response.statusText);
@@ -56,6 +57,7 @@ app.controller("TrackController", function($scope, $http, $rootScope, $filter){
 					'Content-Type' : 'application/json; charset=UTF-8'
 				}
 			}).then(function successCallback(response) {
+				$scope.searchForm.labelSelect = $rootScope.labelId;
 				$scope.tracks = response.data;
 			}, function errorCallback(response) {
 				console.log(response.statusText);
@@ -72,6 +74,7 @@ app.controller("TrackController", function($scope, $http, $rootScope, $filter){
 					'Content-Type' : 'application/json; charset=UTF-8'
 				}
 			}).then(function successCallback(response) {
+				$scope.searchForm.albumSelect = $rootScope.albumId;
 				$scope.tracks = response.data;
 			}, function errorCallback(response) {
 				console.log(response.statusText);
@@ -88,6 +91,7 @@ app.controller("TrackController", function($scope, $http, $rootScope, $filter){
 					'Content-Type' : 'application/json; charset=UTF-8'
 				}
 			}).then(function successCallback(response) {
+				$scope.searchForm.singerSelect = $rootScope.singerId;
 				$scope.tracks = response.data;
 			}, function errorCallback(response) {
 				console.log(response.statusText);
