@@ -115,5 +115,9 @@ public class DBConnection {
     public void setResetTime(Date resetTime) {
         this.resetTime = resetTime;
     }
+
+    public boolean isClosed() throws SQLException {
+        return connection.isClosed();
+    }
 }
 

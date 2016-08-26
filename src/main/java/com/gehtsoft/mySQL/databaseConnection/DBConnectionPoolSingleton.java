@@ -60,13 +60,34 @@ public class DBConnectionPoolSingleton {
     }
 
     public synchronized DBConnection getDBConnection() throws SQLException {
-        for (DBConnection dbConnection : dbConnections) {
+        if(logger.isDebugEnabled()) {
+            logger.debug("Trying to get connection...");
+        }
+        for (Iterator<DBConnection> iter = dbConnections.listIterator(); iter.hasNext(); ) {
+            DBConnection dbConnection = iter.next();
+            if(dbConnection.isClosed()) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Connection closed: " + dbConnection.getConnection());
+                }
+                if (dbConnection.isLocked()) {
+                    amountOfLocked--;
+                }
+                iter.remove();
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Connection removed from pool: " + dbConnection.getConnection());
+                    logger.debug("Amount of connections: " + dbConnections.size());
+                    logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
+                    logger.debug("Amount of locked connections: " + amountOfLocked);
+                }
+                continue;
+            }
             if (!dbConnection.isLocked()) {
-                amountOfLocked++;
                 dbConnection.setLocked(true);
+                amountOfLocked++;
                 dbConnection.setResetTime(dateService.getNow());
                 if(logger.isDebugEnabled()) {
                     logger.debug("Connection locked: " + dbConnection.getConnection());
+                    logger.debug("Amount of connections: " + dbConnections.size());
                     logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
                     logger.debug("Amount of locked connections: " + amountOfLocked);
                 }
@@ -74,13 +95,17 @@ public class DBConnectionPoolSingleton {
             }
         }
         if (dbConnections.size() != maxAmount) {
-            amountOfLocked++;
+            if(logger.isDebugEnabled()) {
+                logger.debug("Trying to create new connection...");
+            }
             DBConnection dbConnection = new DBConnection();
             dbConnection.setLocked(true);
+            amountOfLocked++;
             dbConnections.add(dbConnection);
             dbConnection.setResetTime(dateService.getDate(Calendar.SECOND, resetTimeInSeconds));
             if(logger.isDebugEnabled()) {
                 logger.debug("Connection locked: " + dbConnection.getConnection());
+                logger.debug("Amount of connections: " + dbConnections.size());
                 logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
                 logger.debug("Amount of locked connections: " + amountOfLocked);
             }
@@ -90,13 +115,17 @@ public class DBConnectionPoolSingleton {
     }
 
     public synchronized void retrieveDBConnection(DBConnection dbConnection) throws SQLException {
+        if(logger.isDebugEnabled()) {
+            logger.debug("Trying to retrieve connection...");
+        }
         for (DBConnection dbc : dbConnections) {
             if (dbc.equals(dbConnection)) {
-                amountOfLocked--;
                 dbc.setLocked(false);
+                amountOfLocked--;
                 dbConnection.setResetTime(dateService.getDate(Calendar.SECOND, resetTimeInSeconds));
                 if(logger.isDebugEnabled()) {
                     logger.debug("Connection unlocked: " + dbConnection.getConnection());
+                    logger.debug("Amount of connections: " + dbConnections.size());
                     logger.debug("Amount of unlocked connections: " + (dbConnections.size() - amountOfLocked));
                     logger.debug("Amount of locked connections: " + amountOfLocked);
                 }
@@ -109,6 +138,7 @@ public class DBConnectionPoolSingleton {
         boolean cleared = false;
         if(logger.isDebugEnabled()) {
             logger.debug("Start clearing locked connection with timeout.");
+            logger.debug("Amount of connections: " + dbConnections.size());
         }
         for (DBConnection dbConnection : dbConnections) {
             Date now = dateService.getNow();
@@ -117,6 +147,7 @@ public class DBConnectionPoolSingleton {
                     logger.debug("Connection removed back to unlocked: " + dbConnection.getConnection());
                 }
                 dbConnection.setLocked(false);
+                amountOfLocked--;
                 cleared = true;
             }
         }
