@@ -81,7 +81,7 @@ public class SingerRestTest extends JerseyTest {
         Cookie fakeCookie = new Cookie("authdata", "fakeCookie");
 
         Response response = target("singer").request().cookie(fakeCookie).accept(MediaType.APPLICATION_JSON).get(Response.class);
-        Assert.assertEquals(403, response.getStatus());
+        Assert.assertEquals(401, response.getStatus());
 
         Cookie cookie = new Cookie("authdata", token.getJwt());
 
