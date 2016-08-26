@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Created by dkuzmin on 8/23/2016.
  */
-public class AuthenticateChecker {
+public class CookieAuthChecker implements IAuthChecker {
 
     final static Logger logger = Logger.getLogger("authenticate");
 
-    public static Token validate(HttpServletRequest httpServletRequest) throws Exception {
+    @Override
+    public Token validate(HttpServletRequest httpServletRequest) throws Exception {
         logger.info("Request URI: " + httpServletRequest.getRequestURI());
         String jwt = null;
         Cookie[] cookies = httpServletRequest.getCookies();
@@ -23,6 +24,9 @@ public class AuthenticateChecker {
                 if (cookie.getName().equals("authdata")) {
                     jwt = cookie.getValue();
                     logger.info("JWT from cookies: " + jwt);
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Cookie: " + cookie.getName() + " : " + cookie.getValue());
                 }
             }
             if (jwt == null) {

@@ -1,7 +1,8 @@
 package com.gehtsoft.rest;
 
-import com.gehtsoft.auth.AuthenticateChecker;
+import com.gehtsoft.auth.IAuthChecker;
 import com.gehtsoft.core.Singer;
+import com.gehtsoft.factory.SecurityFactory;
 import com.gehtsoft.threadPool.ThreadPoolSingleton;
 import com.gehtsoft.token.Token;
 import org.apache.log4j.Logger;
@@ -36,8 +37,9 @@ public class SingerResource {
 
     @Context
     public void checkAuthenticate(HttpServletRequest httpServletRequest) throws Exception {
-        if ((token = AuthenticateChecker.validate(this.request)) == null) {
-            response.sendError(403);
+        IAuthChecker authChecker = SecurityFactory.getAuthChecker();
+        if ((token = authChecker.validate(this.request)) == null) {
+            response.sendError(401);
         }
     }
 

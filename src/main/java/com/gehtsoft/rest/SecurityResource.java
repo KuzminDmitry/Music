@@ -41,12 +41,10 @@ public class SecurityResource {
         this.request = httpServletRequest;
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies == null) {
-            logger.error("Cookies is null!");
-            response.sendError(403);
+            logger.error("Client cookies are not enabled!");
+            response.sendError(400);
         }
     }
-
-    private static IUserService userService = ServiceFactory.getUserService();
 
     @Path("/login")
     @POST
@@ -66,11 +64,11 @@ public class SecurityResource {
         user.setUserName(username);
         user.setPassword(passwordHash);
 
-        user = (User)ThreadPoolSingleton.getInstance().userThread(User.class, "getByFilter", user);
+        user = (User) ThreadPoolSingleton.getInstance().userThread(User.class, "getByFilter", user);
 
         if (user == null) {
             logger.error("User with username=" + username + " and password=" + password + " not found!");
-            return Response.status(Response.Status.FORBIDDEN.getStatusCode()).build();
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
 
         logger.info("User found: " + user);
@@ -79,7 +77,7 @@ public class SecurityResource {
 
         if (token == null) {
             logger.error("Token for " + user + " not created!");
-            return Response.status(Response.Status.FORBIDDEN.getStatusCode()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
 
         logger.info("Generated token: " + token);
@@ -95,12 +93,11 @@ public class SecurityResource {
             Token token = TokenMemorySingleton.getInstance().getToken(jwt);
             if (token != null) {
                 TokenMemorySingleton.getInstance().deleteToken(token);
-            }
-            else{
-                logger.error("Token is null!");
+            } else {
+                logger.error("Token is null! User tried logout with his jwt, but token was not found!");
             }
         } else {
-            logger.error("JWT is null!");
+            logger.error("User tried logout with his jwt, but jwt is null!");
         }
         return Response.status(Response.Status.OK.getStatusCode()).build();
     }

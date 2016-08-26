@@ -38,12 +38,15 @@ app.controller("SecurityController", function($scope, $http, $rootScope, $cookie
 				$cookies.remove("cookieEnableTest", "cookieEnableTest"); 
 			}, function errorCallback(response) {
 				$scope.loginFormValidation.accessDenied = true;
-				if(response.status == 500){
+				if(response.status == 400){
 					$scope.loginFormValidation.accessDeniedMessage = "Cookies are not enabled!";					
 				}
-				if(response.status == 403){
+				if(response.status == 401){
 					$scope.loginFormValidation.accessDeniedMessage = "Wrong username or password!";					
 				}
+				if(response.status == 500){
+                    $scope.loginFormValidation.accessDeniedMessage = "Server cannot respond!";
+                }
 				console.log(response.statusText);
 			});
 		}
